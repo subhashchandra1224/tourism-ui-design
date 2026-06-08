@@ -1,0 +1,12 @@
+# Logs
+logs
+*.log
+
+# Mac OS
+.DS_Store
+
+# Editor
+.vscode/
+
+# Env
+.env

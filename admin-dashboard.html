@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Tourism Adventures</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --accent-color: #1d4ed8;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu i {
+            margin-right: 0.75rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            background: #f3f4f6;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .packages-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .package-card h3 {
+            font-size: 1.5rem;
+            color: #1f2937;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .package-price {
+            font-size: 1.25rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .package-duration {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .package-description {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: fit-content;
+            margin-top: 0.5rem;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .package-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:not(.btn-primary) {
+            background: #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .package-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .package-features span {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .package-features i {
+            color: #10b981;
+        }
+
+        .package-rating {
+            color: #fbbf24;
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+        }
+
+        .cta-button-outline {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #3b82f6;
+            color: #3b82f6;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="active">
+                        <i class="fas fa-box"></i>
+                        Packages
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <i class="fas fa-users"></i>
+                        Users
+                    </a>
+                </li>
+                <li>
+                    <a href="bookings.html">
+                        <i class="fas fa-calendar-check"></i>
+                        Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="header">
+                <h1>Package Management</h1>
+                <button class="btn btn-primary" onclick="openAddPackageModal()">
+                    <i class="fas fa-plus"></i>
+                    Add New Package
+                </button>
+            </div>
+
+            <div class="packages-container" id="packagesGrid">
+                <!-- Packages will be loaded here -->
+            </div>
+
+            <div class="bookings-section" style="margin-top: 3rem;">
+                <h2 style="margin-bottom: 1.5rem;">Recent Bookings</h2>
+                <div class="bookings-table-container" style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Booking ID</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Package</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Customer Name</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Contact</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Travel Date</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Guests</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Status</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- Bookings will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Package Modal -->
+    <div class="modal" id="addPackageModal">
+        <div class="modal-content">
+            <h2>Add New Package</h2>
+            <form id="addPackageForm">
+                <div class="form-group">
+                    <label for="packageName">Package Name</label>
+                    <input type="text" id="packageName" placeholder="Please fill in this field." required>
+                </div>
+                <div class="form-group">
+                    <label for="packageCategory">Category</label>
+                    <select id="packageCategory" multiple required>
+                        <option value="north">North India</option>
+                        <option value="south">South India</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="packagePrice">Price (₹)</label>
+                    <input type="number" id="packagePrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="packageDuration">Duration (days)</label>
+                    <input type="number" id="packageDuration" required>
+                </div>
+                <div class="form-group">
+                    <label for="packageDescription">Description</label>
+                    <textarea id="packageDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="packageFeatures">Features (comma-separated)</label>
+                    <textarea id="packageFeatures" placeholder="e.g., Heritage Hotels, Flights Inc., Royal Cuisine" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="packageImage">Image URL</label>
+                    <input type="url" id="packageImage" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeAddPackageModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Package</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check if admin is logged in
+        if (!localStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin-login.html';
+        }
+
+        // Load packages when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPackages();
+            loadBookings();
+        });
+
+        // Load packages function
+        function loadPackages() {
+            const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+            const packagesGrid = document.getElementById('packagesGrid');
+            
+            if (packages.length === 0) {
+                packagesGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">No packages available. Add your first package!</div>';
+                return;
+            }
+
+            packagesGrid.innerHTML = packages.map(pkg => `
+                <div class="package-card">
+                    <img src="${pkg.image}" alt="${pkg.name}" class="package-image">
+                    <h3>${pkg.name}</h3>
+                    <p class="package-price">₹${pkg.price.toLocaleString()}</p>
+                    <p class="package-duration">${pkg.duration} days</p>
+                    <p class="package-description">${pkg.description}</p>
+                    <button class="btn-delete" onclick="deletePackage('${pkg.id}')">
+                        <i class="fas fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Load bookings function
+        function loadBookings() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const bookingsTableBody = document.getElementById('bookingsTableBody');
+            
+            if (bookings.length === 0) {
+                bookingsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="padding: 2rem; text-align: center; color: #6b7280;">
+                            No bookings available yet.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            bookingsTableBody.innerHTML = bookings.map(booking => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${booking.id.slice(-6)}</td>
+                    <td style="padding: 1rem;">${booking.packageName}</td>
+                    <td style="padding: 1rem;">${booking.fullName}</td>
+                    <td style="padding: 1rem;">
+                        <div>${booking.email}</div>
+                        <div>${booking.phone}</div>
+                    </td>
+                    <td style="padding: 1rem;">${new Date(booking.travelDate).toLocaleDateString()}</td>
+                    <td style="padding: 1rem;">${booking.guests}</td>
+                    <td style="padding: 1rem;">
+                        <select onchange="updateBookingStatus('${booking.id}', this.value)" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #e5e7eb;">
+                            <option value="Pending" ${booking.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Confirmed" ${booking.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="Cancelled" ${booking.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <button onclick="deleteBooking('${booking.id}')" class="btn-delete" style="padding: 0.5rem 1rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update booking status
+        function updateBookingStatus(bookingId, newStatus) {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const updatedBookings = bookings.map(booking => {
+                if (booking.id === bookingId) {
+                    return { ...booking, status: newStatus };
+                }
+                return booking;
+            });
+            
+            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+            showSuccessMessage('Booking status updated successfully!');
+            loadBookings();
+        }
+
+        // Delete booking
+        function deleteBooking(bookingId) {
+            if (confirm('Are you sure you want to delete this booking?')) {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+                localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+                
+                showSuccessMessage('Booking deleted successfully!');
+                loadBookings();
+            }
+        }
+
+        // Add package
+        document.getElementById('addPackageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPackage = {
+                id: Date.now().toString(),
+                name: document.getElementById('packageName').value,
+                price: parseFloat(document.getElementById('packagePrice').value),
+                duration: parseInt(document.getElementById('packageDuration').value),
+                description: document.getElementById('packageDescription').value,
+                image: document.getElementById('packageImage').value,
+                category: ['all'],
+                features: [],
+                rating: 4.8,
+                ratingCount: "4.8"
+            };
+
+            // Get existing packages or initialize empty array
+            const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+            
+            // Add new package
+            packages.push(newPackage);
+            
+            // Save back to localStorage
+            localStorage.setItem('packages', JSON.stringify(packages));
+
+            // Clear form
+            document.getElementById('addPackageForm').reset();
+            
+            // Close modal
+            closeAddPackageModal();
+            
+            // Show success message
+            showSuccessMessage('Package added successfully!');
+            
+            // Reload packages display
+            loadPackages();
+            
+            console.log('Current packages:', packages); // Debug log
+        });
+
+        // Delete package
+        function deletePackage(packageId) {
+            if (confirm('Are you sure you want to delete this package?')) {
+                const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+                const updatedPackages = packages.filter(pkg => pkg.id !== packageId);
+                localStorage.setItem('packages', JSON.stringify(updatedPackages));
+                
+                showSuccessMessage('Package deleted successfully!');
+                loadPackages();
+            }
+        }
+
+        // Modal functions
+        function openAddPackageModal() {
+            document.getElementById('addPackageModal').style.display = 'flex';
+        }
+
+        function closeAddPackageModal() {
+            document.getElementById('addPackageModal').style.display = 'none';
+            document.getElementById('addPackageForm').reset();
+        }
+
+        // Success message
+        function showSuccessMessage(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Debug: Log current packages on page load
+        console.log('Packages on load:', JSON.parse(localStorage.getItem('packages') || '[]'));
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Packages - Tourism Adventures</title>
+    <link rel="icon" href="assets/images/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .booking-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .success-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .booking-form input,
+        .booking-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .booking-form label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header id="header" class="header-solid">
+        <nav id="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">Tourism</a>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="destinations.html" class="nav-link">Destinations</a></li>
+                    <li><a href="packages.html" class="nav-link active">Packages</a></li>
+                    <li><a href="testimonials.html" class="nav-link">Testimonials</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-extras">
+                    <div id="userSection" style="margin-right: 1rem;">
+                        <a href="user-login.html" id="loginLink" style="text-decoration: none; color: inherit;">Login</a>
+                        <span id="userInfo" style="display: none;">
+                            <span id="userName"></span>
+                            <button onclick="logout()" style="background: none; border: none; cursor: pointer; margin-left: 0.5rem;">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <button id="darkModeToggle" class="dark-mode-button">🌙</button>
+                    <div class="hamburger-menu" id="hamburgerMenu">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="page-hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/images/placeholder.jpg');">
+        <div class="container">
+            <h1 data-aos="fade-down">Our Travel Packages</h1>
+        </div>
+    </section>
+
+    <section id="package-listing" class="section-padding">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Find Your Perfect Getaway</h2>
+
+            <div class="package-filters" data-aos="fade-up">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="north">North India</button>
+                <button class="filter-btn" data-filter="south">South India</button>
+                <button class="filter-btn" data-filter="adventure">Adventure</button>
+                <button class="filter-btn" data-filter="luxury">Luxury</button>
+            </div>
+
+            <div class="package-grid full-grid">
+                <div class="package-card" data-category="north luxury" data-aos="fade-up" data-aos-delay="100" id="rajasthan-package">
+                    <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?q=100&w=1600&auto=format&fit=crop" alt="Royal Rajasthan Tour">
+                    <div class="package-info">
+                        <h3>Royal Rajasthan Tour</h3>
+                        <p class="package-price">₹89,999</p>
+                        <div class="package-rating">★★★★★ (4.8)</div>
+                        <div class="package-features">
+                            <span><i class="fas fa-hotel"></i> Heritage Hotels</span>
+                            <span><i class="fas fa-plane"></i> Flights Inc.</span>
+                            <span><i class="fas fa-utensils"></i> Royal Cuisine</span>
+                            <span><i class="fas fa-user-friends"></i> Desert Safari</span>
+                        </div>
+                        <a href="#" class="cta-button-outline">Book Now</a>
+                    </div>
+                </div>
+                <div class="package-card" data-category="south adventure" data-aos="fade-up" data-aos-delay="200" id="kerala-package">
+                    <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=100&w=1600&auto=format&fit=crop" alt="Kerala Backwaters">
+                    <div class="package-info">
+                        <h3>Kerala Backwaters Bliss</h3>
+                        <p class="package-price">₹64,999</p>
+                        <div class="package-rating">★★★★★ (4.9)</div>
+                        <div class="package-features">
+                            <span><i class="fas fa-hotel"></i> Houseboat Stay</span>
+                            <span><i class="fas fa-spa"></i> Ayurveda Spa</span>
+                            <span><i class="fas fa-leaf"></i> Tea Gardens</span>
+                        </div>
+                        <a href="#" class="cta-button-outline">Book Now</a>
+                    </div>
+                </div>
+                <div class="package-card" data-category="north adventure" data-aos="fade-up" data-aos-delay="300" id="ladakh-package">
+                    <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=100&w=1600&auto=format&fit=crop" alt="Ladakh Adventure">
+                    <div class="package-info">
+                        <h3>Ladakh Adventure Trek</h3>
+                        <p class="package-price">₹74,999</p>
+                        <div class="package-rating">★★★★☆ (4.6)</div>
+                        <div class="package-features">
+                            <span><i class="fas fa-mountain"></i> Mountain Trekking</span>
+                            <span><i class="fas fa-motorcycle"></i> Bike Tours</span>
+                            <span><i class="fas fa-om"></i> Monastery Visits</span>
+                        </div>
+                        <a href="#" class="cta-button-outline">Book Now</a>
+                    </div>
+                </div>
+                <div class="package-card" data-category="south luxury adventure" data-aos="fade-up" data-aos-delay="100" id="goa-package">
+                    <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=100&w=1600&auto=format&fit=crop" alt="Goa Beaches">
+                    <div class="package-info">
+                        <h3>Goa Beach & Culture</h3>
+                        <p class="package-price">₹54,999</p>
+                        <div class="package-rating">★★★★★ (4.7)</div>
+                        <div class="package-features">
+                            <span><i class="fas fa-umbrella-beach"></i> Beach Resorts</span>
+                            <span><i class="fas fa-glass-cheers"></i> Nightlife</span>
+                            <span><i class="fas fa-water"></i> Water Sports</span>
+                            <span><i class="fas fa-church"></i> Heritage Tours</span>
+                        </div>
+                        <a href="#" class="cta-button-outline">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add booking form popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="booking-popup" id="bookingPopup">
+        <span class="close-popup" id="closePopup">&times;</span>
+        <h2>Book Your Package</h2>
+        <form id="bookingForm" class="booking-form">
+            <div>
+                <label for="packageName">Selected Package:</label>
+                <input type="text" id="packageName" readonly>
+            </div>
+            <div>
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" required>
+            </div>
+            <div>
+                <label for="travelDate">Preferred Travel Date:</label>
+                <input type="date" id="travelDate" required>
+            </div>
+            <div>
+                <label for="guests">Number of Guests:</label>
+                <select id="guests" required>
+                    <option value="1">1 Person</option>
+                    <option value="2">2 People</option>
+                    <option value="3">3 People</option>
+                    <option value="4">4 People</option>
+                    <option value="5">5+ People</option>
+                </select>
+            </div>
+            <button type="submit" class="cta-button">Book Now</button>
+        </form>
+    </div>
+
+    <!-- Add success message popup -->
+    <div class="success-popup" id="successPopup">
+        Package booked successfully! We'll contact you shortly with more details.
+    </div>
+
+    
+    <footer id="footer">
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h4>Tourism Adventures</h4>
+                <p>Crafting unforgettable journeys across India. Your adventure starts here.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="destinations.html">Destinations</a></li>
+                    <li><a href="packages.html">Packages</a></li>
+                    <li><a href="testimonials.html">Testimonials</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Tourism Adventures</p>
+                <p><i class="fas fa-phone"></i>+91 6786937596</p>
+                <p><i class="fas fa-envelope"></i>tourism@travels.com</p>
+            </div>
+            <div class="footer-column">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="currentYear"></span> GlobeTrek Adventures. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/booking.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPackagesFromStorage();
+            checkUserAuth();
+        });
+
+        function checkUserAuth() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const loginLink = document.getElementById('loginLink');
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+
+            if (currentUser && currentUser.username) {
+                loginLink.style.display = 'none';
+                userInfo.style.display = 'inline-flex';
+                userName.textContent = '@' + currentUser.username;
+            } else {
+                loginLink.style.display = 'inline';
+                userInfo.style.display = 'none';
+                loginLink.textContent = 'Login';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'user-login.html';
+        }
+
+        function openBookingPopup(packageName, price) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                alert('Please login to book a package');
+                window.location.href = 'user-login.html';
+                return;
+            }
+
+            document.getElementById('packageName').value = packageName;
+            document.getElementById('fullName').value = currentUser.name;
+            document.getElementById('email').value = currentUser.email;
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('bookingPopup').style.display = 'block';
+        }
+
+        // Listen for changes in localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'packages') {
+                loadPackagesFromStorage();
+            }
+        });
+
+        function loadPackagesFromStorage() {
+            const packages = JSON.parse(localStorage.getItem('packages') || '[]');
+            const packageGrid = document.querySelector('.package-grid');
+            
+            // Clear existing dynamic packages while keeping hardcoded ones
+            const hardcodedPackages = Array.from(packageGrid.querySelectorAll('.package-card')).filter(card => 
+                ['rajasthan-package', 'kerala-package', 'ladakh-package', 'goa-package'].includes(card.id)
+            );
+            packageGrid.innerHTML = '';
+            hardcodedPackages.forEach(pkg => packageGrid.appendChild(pkg));
+            
+            // Add new packages from localStorage
+            const newPackagesHtml = packages.map(pkg => `
+                <div class="package-card" data-category="${pkg.category ? pkg.category.join(' ').toLowerCase() : 'all'}" data-aos="fade-up" data-aos-delay="100" id="${pkg.id}-package">
+                    <img src="${pkg.image}" alt="${pkg.name}">
+                    <div class="package-info">
+                        <h3>${pkg.name}</h3>
+                        <p class="package-price">₹${pkg.price.toLocaleString()}</p>
+                        <div class="package-rating">★★★★★ (${pkg.ratingCount || '4.8'})</div>
+                        <div class="package-features">
+                            ${pkg.features && pkg.features.length > 0 ? 
+                                pkg.features.map(feature => `
+                                    <span><i class="fas fa-check"></i> ${feature}</span>
+                                `).join('') : 
+                                '<span><i class="fas fa-check"></i> Standard Package</span>'
+                            }
+                        </div>
+                        <a href="#" class="cta-button-outline" onclick="openBookingPopup('${pkg.name}', ${pkg.price})">Book Now</a>
+                    </div>
+                </div>
+            `).join('');
+
+            // Append new packages
+            packageGrid.insertAdjacentHTML('beforeend', newPackagesHtml);
+
+            // Initialize AOS for new elements
+            if (typeof AOS !== 'undefined') {
+                AOS.refresh();
+            }
+        }
+
+        // Add form submission handler
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const bookingData = {
+                id: Date.now().toString(),
+                packageName: document.getElementById('packageName').value,
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                travelDate: document.getElementById('travelDate').value,
+                guests: document.getElementById('guests').value,
+                status: 'Pending',
+                bookingDate: new Date().toISOString()
+            };
+
+            // Get existing bookings or initialize empty array
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            
+            // Add new booking
+            bookings.push(bookingData);
+            
+            // Save back to localStorage
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            // Show success message and close popup
+            document.getElementById('successPopup').style.display = 'block';
+            document.getElementById('bookingPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('successPopup').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
